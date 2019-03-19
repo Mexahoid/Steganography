@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Steganography
@@ -12,33 +14,28 @@ namespace Steganography
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool one = false;
+        private int _capacity;
+        private int _current;
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private void AnalyzeButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string arr = Stegoanalyzer.Instance.GetData();
-                Raw.Document = new FlowDocument(new Paragraph(new Run(arr)));
-            }
-            catch (Exception ex)
-            {
-                Raw.Document = new FlowDocument(new Paragraph(new Run("Ошибка: " + ex.Message)));
-            }
-        }
-
+        
         private void LoadFirstButton_Click(object sender, RoutedEventArgs e)
         {
             BitmapImage bi3 = GetImage();
             InputImage.Source = bi3;
-            Analyze.IsEnabled = one;
-            one = true;
-            Stegoanalyzer.Instance.BitmapImage2Bitmap(bi3, true);
+            Decoder.Instance.BitmapImage2Bitmap(bi3);
+            _capacity = Decoder.Instance.GetCapacity();
+            AvalLabel.Text = $"{_capacity.ToString()} ед.";
+            CheckCurrent();
+        }
 
+        private void CheckCurrent()
+        {
+            _current = Raw.Text.Length * 2;
+            CurrLabel.Text = $"{_current} ед.";
+            CurrLabel.Foreground = _current > _capacity ? Brushes.Red : Brushes.ForestGreen;
         }
 
         private BitmapImage GetImage()
@@ -64,38 +61,31 @@ namespace Steganography
             return bi3;
         }
 
-        private void LoadSecondButton_Click(object sender, RoutedEventArgs e)
+        private void SaveImage(string text)
         {
-            BitmapImage bi3 = GetImage();
-            InputSecondImage.Source = bi3;
-            Analyze.IsEnabled = one;
-            Stegoanalyzer.Instance.BitmapImage2Bitmap(bi3, false);
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() != true)
+            {
+                return;
+            }
+
+            Decoder.Instance.Encode(text, sfd.FileName);
+            MessageBox.Show("Сохранено!");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Decrypt_OnClick(object sender, RoutedEventArgs e)
         {
-            if (First.IsChecked == null || Second.IsChecked == null)
-                return;
-            if (!int.TryParse(BitBox.Text, out int bits))
-            {
-                MessageBox.Show("Неверный формат битов");
-                return;
-            }
-            int flag = (bool)First.IsChecked ? 1 : (bool)Second.IsChecked ? 2 : 3;
-            Stegoanalyzer.Instance.Bits = bits;
-            Stegoanalyzer.Instance.Flag = flag;
+            Raw.Text = Decoder.Instance.Decode((BitmapImage) InputImage.Source);
+        }
 
-            string sir = "";
-            try
-            {
-                sir = Stegoanalyzer.Instance.Reset();
-            }
-            catch (Exception exception)
-            {
-                sir = exception.Message;
-            }
+        private void Encrypt_OnClick(object sender, RoutedEventArgs e)
+        {
+            SaveImage(Raw.Text);
+        }
 
-            Raw.Document = new FlowDocument(new Paragraph(new Run(sir)));
+        private void Raw_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            CheckCurrent();
         }
     }
 }
