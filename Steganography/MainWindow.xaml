@@ -5,8 +5,79 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Steganography"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Стеганография" Height="600" Width="1200" FontFamily="Comic Sans MS">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontFamily="Comic Sans MS" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">Стеганография</TextBlock>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="40*"/>
+                <ColumnDefinition Width="20*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Margin="10, 10, 5, 10" Background="#DDDDDD" BorderBrush="Black" BorderThickness="2">
+                    <Image Name="InputImage"/>
+                </Border>
+                <Button Grid.Row="1" FontSize="16" FontFamily="Comic Sans MS" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Content="Загрузить фото" Click="LoadFirstButton_Click"/>
+                
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Margin="10, 10, 5, 10" Background="#DDDDDD" BorderBrush="Black" BorderThickness="2">
+                    <Image Name="InputSecondImage"/>
+                </Border>
+                <Button Grid.Row="1" FontSize="16" FontFamily="Comic Sans MS" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="5" Content="Загрузить фото" Click="LoadSecondButton_Click"/>
+
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" FontSize="16" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" >Биты</TextBlock>
+                    <TextBox Name="BitBox" Grid.Row="1" Grid.Column="0" FontSize="16" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">4</TextBox>
+                    <Button Grid.Row="2" Grid.Column="0" FontSize="16" Margin="5" Click="Button_Click">Жмакни меня</Button>
+                    
+                    <RadioButton Grid.Row="0" Name="First" Grid.Column="1" FontSize="16" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsChecked="True">Первая</RadioButton>
+                    <RadioButton Grid.Row="1" Name="Second" Grid.Column="1" FontSize="16" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" >Вторая</RadioButton>
+                    <RadioButton Grid.Row="2" Grid.Column="1" FontSize="16" Margin="5" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">XOR</RadioButton>
+                </Grid>
+
+                <TextBlock Grid.Row="1" FontFamily="Comic Sans MS" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">RAW</TextBlock>
+                <RichTextBox Grid.Row="2" Name="Raw" Margin="5, 10, 10, 10" VerticalScrollBarVisibility="Auto" FontSize="16" IsReadOnly="True"/>
+                <Button Grid.Row="3" Name="Analyze" FontSize="16" FontFamily="Comic Sans MS" Margin="10" VerticalAlignment="Center" Content="Стегоанализ" Click="AnalyzeButton_Click" IsEnabled="False"/>
+
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
